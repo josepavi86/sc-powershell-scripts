@@ -8,6 +8,7 @@
 #							
 # Invoke-Script 'SampleScripts\Set-ItemProps' -ArgumentList $argumentList | Out-File C:\Scripts\Set-ItemProps.log
 
+# -------------------------- PARAMS SECTION ------------------------
 param($params);
 $path = $($params.path);
 $templateAttr = $($params.templateAttr);
@@ -30,8 +31,13 @@ if ($templateId -ne $null -and $templateId -ne '') {
 }
 
 $count = 0;
+# -------------------------- QUERY SECTION --------------------------
+# Get-Item using -query option depends on the value of Query.MaxItems setting
+# It's 100 by default and the Sitecore.ExperienceExplorer.config sets it
+# to 260. You can explore the command Get-ChildItem instead.
 foreach($item in Get-Item -Path master: -Query $queryPath) {
-	
+
+# -------------------------- ITERATIVE SECTION ----------------------
 	$item.Editing.BeginEdit();
 
 	$templateAttr.GetEnumerator() | ForEach-Object {
